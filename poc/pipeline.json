@@ -1,0 +1,56 @@
+{
+  "objects": [
+    {
+      "id": "Default",
+      "scheduleType": "CRON",
+      "failureAndRerunMode": "CASCADE",
+      "name": "Default",
+      "role": "DataPipelineDefaultRole",
+      "resourceRole": "DataPipelineDefaultResourceRole"
+    },
+    {
+      "id": "PreconditionId_rV840",
+      "preconditionTimeout": "1 Day",
+      "retryDelay": "15 Seconds",
+      "name": "UploadedPrecondition",
+      "onSuccess": {
+        "ref": "ActionId_tdjx8"
+      },
+      "role": "DataPipelineDefaultRole",
+      "s3Prefix": "s3://ephesus.source.bucket/prefix",
+      "type": "S3PrefixNotEmpty"
+    },
+    {
+      "id": "DataNodeId_vm5xt",
+      "schedule": {
+        "ref": "ScheduleId_aSkqp"
+      },
+      "precondition": {
+        "ref": "PreconditionId_rV840"
+      },
+      "directoryPath": "s3://ephesus.source.bucket/prefix",
+      "name": "DataNode",
+      "onSuccess": {
+        "ref": "ActionId_tdjx8"
+      },
+      "type": "S3DataNode"
+    },
+    {
+      "id": "ScheduleId_aSkqp",
+      "startDateTime": "2014-04-17T02:00:00",
+      "name": "DailySchedule",
+      "type": "Schedule",
+      "period": "1 Day",
+      "endDateTime": "2014-04-19T03:00:00"
+    },
+    {
+      "id": "ActionId_tdjx8",
+      "message": "Succeeded we have.",
+      "subject": "Success",
+      "name": "DefaultAction1",
+      "role": "DataPipelineDefaultRole",
+      "topicArn": "arn:aws:sns:us-west-2:537292398562:ephesus-topic",
+      "type": "SnsAlarm"
+    }
+  ]
+}
